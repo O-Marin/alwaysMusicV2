@@ -24,12 +24,12 @@ const agregarMusico = async (nombre, rut, curso, nivel) => {
 
 const update = async (nombre, rut, curso, nivel) => {
   try {
-    const sql =
-      "update musicos set nombre = $1, rut = $2, curso = $3, nivel = $4 where rut = $2";
-    const values = [nombre, rut, curso, nivel];
+    const sql = {
+      text: "update musicos set nombre = $1, rut = $2, curso = $3, nivel = $4 where rut = $2",
+      values: [nombre, rut, curso, nivel],
+    };
 
     const response = await pool.query(sql, values);
-
     console.log("Musico actualizado", response.rows);
   } catch (err) {
     console.log(err);
@@ -38,9 +38,9 @@ const update = async (nombre, rut, curso, nivel) => {
 
 const deleteMusico = async (rut) => {
   try {
-    const sql = "delete from musicos where rut = $1";
-    const values = [rut];
-
+    const sql = {text: "delete from musicos where rut = $1", 
+                values: [rut]
+            }
     const response = await pool.query(sql, values);
     console.log(`Musico Eliminado con rut: ${rut} eliminado`);
   } catch (err) {
@@ -50,9 +50,9 @@ const deleteMusico = async (rut) => {
 
 const getByRut = async (rut) => {
   try {
-    const sql = "select nombre,rut,curso,nivel from musicos where rut = $1";
-    const values = [rut];
-
+    const sql = {text:"select nombre,rut,curso,nivel from musicos where rut = $1", 
+                values:[rut]
+            }
     const response = await pool.query(sql, values);
     console.log(`Mostrando musico con rut: ${rut} `);
     console.log(response.rows);
@@ -74,22 +74,22 @@ const mostrarMusicos = async () => {
   }
 };
 
-switch (opcion){
-    case 'add':
-        agregarMusico(nombre,rut,curso,nivel);
-        break;
-    case 'update':
-        update(nombre,rut,curso,nivel);
-        break;
-    case 'get':
-        mostrarMusicos();
-        break;
-    case 'delete':
-        rut = argumentos[1]
-        deleteMusico(rut);
-        break;
-    case 'getRut':
-        rut = argumentos[1]
-        getByRut(rut);
-        break;
+switch (opcion) {
+  case "add":
+    agregarMusico(nombre, rut, curso, nivel);
+    break;
+  case "update":
+    update(nombre, rut, curso, nivel);
+    break;
+  case "get":
+    mostrarMusicos();
+    break;
+  case "delete":
+    rut = argumentos[1];
+    deleteMusico(rut);
+    break;
+  case "getRut":
+    rut = argumentos[1];
+    getByRut(rut);
+    break;
 }
